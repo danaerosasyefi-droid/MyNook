@@ -1,0 +1,4730 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>My Nook</title>
+
+<style>
+
+/* =========================================================
+   COLORES
+   ========================================================= */
+
+:root {
+    --bg: #d9d9d9;
+    --bg-light: #eeeeee;
+    --main: #b9b9b9;
+    --dark: #666666;
+    --text: #333333;
+    --white: #ffffff;
+    --border: #999999;
+
+    --shadow:
+        0 8px 25px rgba(0,0,0,0.12);
+}
+
+
+/* =========================================================
+   GENERAL
+   ========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+
+    width: 100%;
+    min-height: 100%;
+
+    font-family: Arial, sans-serif;
+
+    color: var(--text);
+
+    background: var(--bg);
+
+    overflow-x: hidden;
+}
+
+button {
+    font-family: inherit;
+}
+
+button,
+.tool-image,
+.dashboard-image,
+#stickerBar {
+    transition:
+        transform 0.18s ease,
+        box-shadow 0.18s ease,
+        background 0.25s ease;
+}
+
+button:hover,
+.tool-image:hover {
+    transform: translateY(-2px);
+}
+
+button:active,
+.tool-image:active,
+.dashboard-image:active,
+#stickerBar:active {
+    transform: scale(0.97);
+}
+
+.dashboard-image img {
+    transition: transform 0.3s ease;
+}
+
+.dashboard-image:hover img {
+    transform: scale(1.04);
+}
+
+#logo {
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+#logo:hover {
+    transform: scale(1.04) rotate(-1deg);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.16);
+}
+
+.tool-image {
+    animation: toolFloat 3.5s ease-in-out infinite;
+}
+
+.tool-image:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.tool-image:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes toolFloat {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-2px);
+    }
+}
+
+
+/* =========================================================
+   PANTALLA DE CARGA
+   ========================================================= */
+
+#loadingScreen {
+
+    position: fixed;
+
+    inset: 0;
+
+    background: var(--white);
+
+    z-index: 99999;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+
+    transition:
+        opacity 0.7s ease,
+        visibility 0.7s ease;
+}
+
+#loadingScreen.fade-out {
+
+    opacity: 0;
+
+    visibility: hidden;
+}
+
+
+#carga {
+
+    width: 150px;
+    height: 150px;
+
+    object-fit: contain;
+
+    margin-bottom: 25px;
+
+    padding: 5px;
+
+    background: var(--white);
+
+    border: 3px solid var(--main);
+
+    border-radius: 12px;
+
+    box-shadow: var(--shadow);
+
+    animation:
+        loadingImage 2s ease-in-out infinite;
+}
+
+
+@keyframes loadingImage {
+
+    0%,
+    100% {
+        transform: scale(1) rotate(0deg);
+    }
+
+    50% {
+        transform: scale(1.06) rotate(2deg);
+    }
+}
+
+
+.loading-bar {
+
+    width: 260px;
+    height: 14px;
+
+    border: 2px solid var(--dark);
+
+    border-radius: 20px;
+
+    overflow: hidden;
+
+    background:
+        rgba(255,255,255,0.25);
+}
+
+
+.loading-progress {
+
+    height: 100%;
+
+    width: 0%;
+
+    background: var(--dark);
+
+    border-radius: inherit;
+
+    transition: width 0.1s linear;
+}
+
+
+/* =========================================================
+   PAGINA
+   ========================================================= */
+
+#mainPage {
+
+    display: none;
+
+    min-height: 100vh;
+
+    padding: 15px;
+
+    animation:
+        pageAppear 0.8s ease;
+}
+
+
+@keyframes pageAppear {
+
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* =========================================================
+   CABECERA
+   ========================================================= */
+
+.top-bar {
+
+    width: 100%;
+
+    height: 70px;
+
+    display: grid;
+
+    grid-template-columns:
+        1fr
+        2fr
+        1fr;
+
+    align-items: center;
+
+    position: relative;
+
+    margin-bottom: 10px;
+}
+
+
+.left-tools {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+.right-tools {
+
+    display: flex;
+
+    justify-content: flex-end;
+
+    align-items: center;
+
+    gap: 8px;
+}
+
+
+#logo {
+
+    width: 100px;
+    height: 55px;
+
+    object-fit: contain;
+
+    padding: 4px;
+
+    background: var(--white);
+
+    border: 3px solid var(--main);
+
+    border-radius: 10px;
+
+    box-shadow: var(--shadow);
+
+    animation:
+        logoAppear 0.8s ease;
+}
+
+
+@keyframes logoAppear {
+
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
+#helpButton {
+
+    width: 38px;
+    height: 38px;
+
+    border-radius: 50%;
+
+    border:
+        2px solid var(--main);
+
+    background:
+        var(--white);
+
+    color:
+        var(--text);
+
+    cursor: pointer;
+
+    font-weight: bold;
+
+    font-size: 18px;
+}
+
+
+.tool-image {
+
+    width: 42px;
+    height: 42px;
+
+    border: 2px solid var(--main);
+
+    border-radius: 10px;
+
+    background:
+        var(--white);
+
+    cursor: pointer;
+
+    font-size: 25px;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+}
+
+
+#pageTitle {
+
+    text-align: center;
+
+    font-size: 34px;
+
+    margin: 0;
+
+    letter-spacing: 1px;
+
+    animation:
+        titleAppear 1s ease;
+}
+
+
+@keyframes titleAppear {
+
+    from {
+        opacity: 0;
+        transform: translateY(-12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* =========================================================
+   POPUPS
+   ========================================================= */
+
+.popup {
+
+    position: fixed;
+
+    background:
+        rgba(255,255,255,0.95);
+
+    border:
+        2px solid var(--main);
+
+    border-radius: 14px;
+
+    padding: 15px;
+
+    z-index: 8000;
+
+    box-shadow:
+        var(--shadow);
+
+    animation:
+        popupAppear 0.22s ease;
+}
+
+
+@keyframes popupAppear {
+
+    from {
+        opacity: 0;
+        transform: translateY(-8px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+
+.hidden {
+    display: none !important;
+}
+
+
+/* =========================================================
+   AYUDA
+   ========================================================= */
+
+#helpPopup {
+
+    top: 75px;
+    left: 15px;
+
+    width:
+        min(400px, calc(100vw - 30px));
+
+    max-height: 70vh;
+
+    overflow-y: auto;
+}
+
+
+/* =========================================================
+   NOTAS
+   ========================================================= */
+
+#notesPopup {
+
+    top: 75px;
+    right: 15px;
+
+    width: 320px;
+}
+
+
+#notesPopup textarea {
+
+    width: 100%;
+
+    height: 120px;
+
+    resize: vertical;
+
+    border:
+        2px solid var(--main);
+
+    border-radius: 8px;
+
+    padding: 8px;
+
+    outline: none;
+}
+
+
+#notesPopup button {
+
+    padding: 8px 12px;
+
+    border:
+        1px solid var(--dark);
+
+    border-radius: 8px;
+
+    background:
+        var(--bg-light);
+
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   CLIMA
+   ========================================================= */
+
+#weatherPopup {
+
+    top: 75px;
+    right: 100px;
+
+    width: 280px;
+}
+
+
+#weatherPopup input {
+
+    width: 100%;
+
+    margin: 5px 0;
+
+    padding: 8px;
+
+    border:
+        2px solid var(--main);
+
+    border-radius: 8px;
+}
+
+
+/* =========================================================
+   COLOR
+   ========================================================= */
+
+#colorPopup {
+
+    top: 75px;
+    right: 45px;
+
+    width: 250px;
+}
+
+
+#pastelPicker {
+
+    width: 100%;
+
+    height: 40px;
+
+    border: none;
+
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   ESTRUCTURA PRINCIPAL
+   ========================================================= */
+
+/*
+    IZQUIERDA     CENTRO              DERECHA
+
+    calendario    PIZARRÓN            dibujo
+    fotos         DECORATIVO           tareas
+    stickers
+*/
+
+.workspace {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr
+        1.55fr
+        1fr;
+
+    gap: 15px;
+
+    min-height:
+        calc(100vh - 105px);
+}
+
+
+/* =========================================================
+   COLUMNA IZQUIERDA
+   ========================================================= */
+
+.left-column {
+
+    display: grid;
+
+    grid-template-rows:
+        1fr
+        1fr
+        auto;
+
+    gap: 15px;
+
+    min-height: 0;
+}
+
+
+/* =========================================================
+   ELEMENTOS IZQUIERDOS
+   ========================================================= */
+
+.dashboard-image {
+
+    background:
+        var(--white);
+
+    border:
+        3px solid var(--dark);
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    cursor: pointer;
+
+    min-height: 150px;
+
+    overflow: hidden;
+
+    border-radius: 10px;
+
+    box-shadow:
+        var(--shadow);
+
+    animation:
+        sectionAppear 0.7s ease backwards;
+}
+
+
+.dashboard-image:hover {
+
+    transform:
+        translateY(-3px);
+
+    box-shadow:
+        0 12px 30px rgba(0,0,0,0.16);
+}
+
+
+.dashboard-image img {
+
+    max-width: 80%;
+    max-height: 80%;
+
+    object-fit: contain;
+}
+
+
+.left-column
+.dashboard-image:nth-child(1) {
+
+    animation-delay: 0.15s;
+}
+
+
+.left-column
+.dashboard-image:nth-child(2) {
+
+    animation-delay: 0.25s;
+}
+
+
+@keyframes sectionAppear {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(15px);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0);
+
+    }
+}
+
+
+/* =========================================================
+   CALENDARIO
+   ========================================================= */
+
+#calendarContainer {
+
+    padding: 0;
+}
+
+
+#calendarPanel {
+
+    width: 100%;
+    height: 100%;
+
+    padding: 10px;
+
+    background:
+        var(--bg-light);
+
+    border:
+        3px solid var(--dark);
+
+    overflow: auto;
+
+    border-radius: 8px;
+
+    animation:
+        calendarOpen 0.3s ease;
+}
+
+
+@keyframes calendarOpen {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            scale(0.96);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            scale(1);
+
+    }
+}
+
+
+.calendar-header {
+
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        center;
+
+    margin-bottom: 8px;
+}
+
+
+.calendar-header button {
+
+    border: 2px solid var(--main);
+
+    background:
+        var(--white);
+
+    border-radius: 6px;
+
+    width: 30px;
+    height: 30px;
+
+    cursor: pointer;
+}
+
+
+.calendar-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(7, 1fr);
+
+    gap: 3px;
+}
+
+
+.calendar-day {
+
+    min-height: 35px;
+
+    background:
+        var(--white);
+
+    border:
+        1px solid var(--border);
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    cursor: pointer;
+
+    position: relative;
+
+    border-radius: 5px;
+
+    transition:
+        transform 0.15s ease,
+        background 0.15s ease;
+}
+
+
+.calendar-day:hover {
+
+    transform:
+        scale(1.05);
+
+    background:
+        var(--bg-light);
+}
+
+
+/*
+    ESTADOS DEL CALENDARIO
+
+    0 = vacío
+    1 = círculo
+    2 = X
+    3 = corazón
+*/
+
+.calendar-day.mark-circle::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 27px;
+    height: 27px;
+
+    border:
+        3px solid red;
+
+    border-radius: 50%;
+
+    animation:
+        markAppear 0.2s ease;
+}
+
+
+.calendar-day.mark-x::after {
+
+    content: "✕";
+
+    color: red;
+
+    font-size: 25px;
+
+    position: absolute;
+
+    animation:
+        markAppear 0.2s ease;
+}
+
+
+.calendar-day.mark-heart::after {
+
+    content: "♥";
+
+    color: red;
+
+    font-size: 24px;
+
+    position: absolute;
+
+    animation:
+        markAppear 0.2s ease;
+}
+
+
+@keyframes markAppear {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            scale(0.5);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            scale(1);
+
+    }
+}
+
+
+/* =========================================================
+   STICKERS
+   ========================================================= */
+
+#stickerBar {
+
+    height: 50px;
+
+    background:
+        var(--white);
+
+    border:
+        3px solid var(--dark);
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    cursor: pointer;
+
+    font-size: 25px;
+
+    border-radius: 10px;
+
+    box-shadow:
+        var(--shadow);
+}
+
+
+#stickerBar:hover {
+
+    transform:
+        translateY(-3px);
+}
+
+
+#stickerPanel {
+
+    position: fixed;
+
+    left: 15px;
+
+    bottom: 70px;
+
+    width: 220px;
+
+    max-height: 70vh;
+
+    background:
+        rgba(255,255,255,0.94);
+
+    border:
+        3px solid var(--dark);
+
+    border-radius: 12px;
+
+    padding: 10px;
+
+    z-index: 7000;
+
+    overflow-y: auto;
+
+    animation:
+        stickerPanelAppear 0.3s ease;
+}
+
+
+@keyframes stickerPanelAppear {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateX(-20px);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateX(0);
+
+    }
+}
+
+
+.sticker-option {
+
+    width: 80px;
+    height: 80px;
+
+    object-fit: contain;
+
+    cursor: pointer;
+
+    margin: 5px;
+
+    transition:
+        transform 0.2s ease;
+}
+
+
+.sticker-option:hover {
+
+    transform:
+        scale(1.1)
+        rotate(3deg);
+}
+
+
+/* =========================================================
+   PIZARRÓN DECORATIVO CENTRAL
+   ========================================================= */
+
+.center-frame {
+
+    position: relative;
+
+    min-height: 500px;
+
+    border:
+        6px solid var(--main);
+
+    border-radius: 14px;
+
+    background:
+        rgba(255,255,255,0.08);
+
+    box-shadow:
+        var(--shadow);
+
+    overflow: visible;
+
+    animation:
+        frameAppear 0.8s ease;
+}
+
+
+@keyframes frameAppear {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            scale(0.98);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            scale(1);
+
+    }
+}
+
+
+/*
+    Este es solamente el espacio decorativo.
+    No posee herramientas ni funciones.
+*/
+
+.center-frame::before {
+
+    content:
+        "Pizarrón decorativo";
+
+    position: absolute;
+
+    top: 12px;
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+
+    opacity: 0.18;
+
+    font-size: 14px;
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   ELEMENTOS MOVIBLES
+   ========================================================= */
+
+.movable {
+
+    position: absolute;
+
+    cursor: grab;
+
+    user-select: none;
+
+    touch-action: none;
+
+    animation:
+        objectAppear 0.35s ease;
+}
+
+
+@keyframes objectAppear {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            scale(0.85);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            scale(1);
+
+    }
+}
+
+
+.movable:active {
+
+    cursor: grabbing;
+}
+
+
+/* =========================================================
+   NOTAS EN LA PÁGINA
+   ========================================================= */
+
+.note {
+
+    position: absolute;
+
+    width: 180px;
+
+    min-width: 100px;
+
+    min-height: 80px;
+
+    padding: 15px;
+
+    background:
+        var(--main);
+
+    border:
+        2px solid var(--dark);
+
+    border-radius: 8px;
+
+    cursor: grab;
+
+    user-select: none;
+
+    z-index: 100;
+
+    box-shadow:
+        var(--shadow);
+
+    animation:
+        noteAppear 0.35s ease;
+}
+
+
+@keyframes noteAppear {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(15px)
+            rotate(-2deg);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            rotate(0deg);
+
+    }
+}
+
+
+.note textarea {
+
+    width: 100%;
+
+    height: 100%;
+
+    min-height: 70px;
+
+    border: none;
+
+    outline: none;
+
+    resize: both;
+
+    background:
+        transparent;
+
+    color:
+        var(--text);
+
+    font-family:
+        inherit;
+}
+
+
+/* =========================================================
+   COLUMNA DERECHA
+   ========================================================= */
+
+.right-column {
+
+    display: grid;
+
+    grid-template-rows:
+        1fr
+        1fr;
+
+    gap: 15px;
+
+    min-height: 0;
+}
+
+
+/* =========================================================
+   PIZARRÓN DE DIBUJO
+   ========================================================= */
+
+.paint-container {
+
+    background:
+        var(--white);
+
+    border:
+        4px solid var(--main);
+
+    border-radius: 12px;
+
+    position: relative;
+
+    min-height: 300px;
+
+    overflow: hidden;
+
+    box-shadow:
+        var(--shadow);
+
+    animation:
+        sectionAppear 0.7s ease 0.3s backwards;
+}
+
+
+.paint-title {
+
+    position: absolute;
+
+    left: 7px;
+    top: 7px;
+
+    font-size: 22px;
+
+    z-index: 10;
+}
+
+
+.paint-tools {
+
+    position: absolute;
+
+    top: 5px;
+    right: 5px;
+
+    display: flex;
+
+    gap: 4px;
+
+    z-index: 20;
+}
+
+
+.paint-tools button {
+
+    width: 34px;
+    height: 34px;
+
+    border:
+        1px solid var(--dark);
+
+    background:
+        var(--bg-light);
+
+    cursor: pointer;
+
+    font-size: 18px;
+
+    border-radius: 6px;
+}
+
+
+.paint-tools button:hover {
+
+    transform:
+        scale(1.08);
+}
+
+
+#drawColor {
+
+    width: 34px;
+    height: 34px;
+
+    padding: 0;
+
+    border: none;
+
+    cursor: pointer;
+}
+
+
+#paintCanvas {
+
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    cursor: crosshair;
+}
+
+
+/* =========================================================
+   CHECKLIST
+   ========================================================= */
+
+.todo-container {
+
+    background:
+        var(--bg-light);
+
+    border:
+        4px solid var(--main);
+
+    border-radius: 12px;
+
+    padding: 10px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    min-height: 0;
+
+    box-shadow:
+        var(--shadow);
+
+    animation:
+        sectionAppear 0.7s ease 0.4s backwards;
+}
+
+
+.todo-title {
+
+    margin:
+        0 0 10px 0;
+
+    text-align:
+        center;
+}
+
+
+#todoList {
+
+    flex: 1;
+
+    overflow: hidden;
+}
+
+
+.todo-item {
+
+    display: grid;
+
+    grid-template-columns:
+        25px
+        1fr
+        30px
+        30px;
+
+    gap: 5px;
+
+    align-items:
+        center;
+
+    margin-bottom: 6px;
+
+    padding: 5px;
+
+    border:
+        2px solid var(--main);
+
+    background:
+        var(--white);
+
+    border-radius: 6px;
+
+    animation:
+        taskAppear 0.25s ease;
+}
+
+
+@keyframes taskAppear {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateX(10px);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateX(0);
+
+    }
+}
+
+
+.todo-item input[type="checkbox"] {
+
+    width: 18px;
+    height: 18px;
+}
+
+
+.todo-item.completed
+.todo-text {
+
+    text-decoration:
+        line-through;
+}
+
+
+.todo-item button {
+
+    border: none;
+
+    background:
+        transparent;
+
+    cursor: pointer;
+
+    font-size: 18px;
+}
+
+
+#addTodo {
+
+    padding:
+        8px;
+
+    border:
+        1px solid var(--dark);
+
+    border-radius:
+        7px;
+
+    background:
+        var(--white);
+
+    cursor:
+        pointer;
+}
+
+
+/* =========================================================
+   FOTOS
+   ========================================================= */
+
+.user-photo {
+
+    max-width:
+        250px;
+
+    max-height:
+        250px;
+
+    border-radius:
+        5px;
+
+    box-shadow:
+        var(--shadow);
+}
+
+
+/* =========================================================
+   STICKERS AGREGADOS
+   ========================================================= */
+
+.user-sticker {
+
+    max-width:
+        180px;
+
+    max-height:
+        180px;
+
+    object-fit:
+        contain;
+
+    padding: 4px;
+
+    border: 3px solid var(--main);
+
+    border-radius: 10px;
+
+    background: var(--white);
+
+    box-shadow:
+        var(--shadow);
+
+    filter:
+        drop-shadow(
+            0 5px 8px rgba(0,0,0,0.12)
+        );
+}
+
+
+/* =========================================================
+   CONTROLES DE ROTACIÓN / TAMAÑO
+   ========================================================= */
+
+.transform-controls {
+
+    position: fixed;
+
+    display: flex;
+
+    gap: 3px;
+
+    z-index: 99999;
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    transition: opacity 0.2s ease, transform 0.2s ease;
+
+    transform: translateY(3px);
+}
+
+
+.transform-controls.visible {
+
+    opacity: 1;
+
+    pointer-events: auto;
+
+    transform: translateY(0);
+}
+
+
+.transform-controls button {
+
+    font-size: 13px;
+
+    min-width: 27px;
+    height: 27px;
+
+    padding: 3px 5px;
+
+    border: 1px solid var(--dark);
+
+    background: var(--white);
+
+    color: var(--text);
+
+    border-radius: 5px;
+
+    cursor: pointer;
+
+    box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+}
+
+
+.transform-controls button:hover {
+
+    transform: translateY(-1px) scale(1.05);
+
+    background: var(--bg-light);
+}
+
+
+/*
+   BOTÓN DE BORRADO PARA TELÉFONOS
+   En PC se mantiene oculto para conservar
+   el funcionamiento original con doble click.
+*/
+.mobile-delete {
+    display: none;
+}
+
+@media (hover: none) and (pointer: coarse) {
+    .mobile-delete {
+        display: block;
+        background: #f4d6d6 !important;
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1000px) {
+
+    .workspace {
+
+        grid-template-columns:
+            1fr 1.3fr 1fr;
+
+        gap:
+            10px;
+    }
+
+    #pageTitle {
+
+        font-size:
+            28px;
+    }
+
+}
+
+
+@media (max-width: 800px) {
+
+    .workspace {
+
+        grid-template-columns:
+            1fr 1fr;
+
+        grid-template-rows:
+            auto auto;
+    }
+
+
+    .center-frame {
+
+        grid-column:
+            1 / 3;
+
+        grid-row:
+            1;
+
+        min-height:
+            350px;
+    }
+
+
+    .left-column {
+
+        grid-column:
+            1;
+
+        grid-row:
+            2;
+
+        min-height:
+            600px;
+    }
+
+
+    .right-column {
+
+        grid-column:
+            2;
+
+        grid-row:
+            2;
+
+        min-height:
+            600px;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    #mainPage {
+
+        padding:
+            8px;
+    }
+
+
+    .top-bar {
+
+        height:
+            60px;
+
+        grid-template-columns:
+            1fr
+            auto
+            1fr;
+    }
+
+
+    #logo {
+
+        width:
+            70px;
+    }
+
+
+    #pageTitle {
+
+        font-size:
+            22px;
+    }
+
+
+    .tool-image,
+    #helpButton {
+
+        width:
+            34px;
+
+        height:
+            34px;
+    }
+
+
+    .right-tools {
+
+        gap:
+            2px;
+    }
+
+
+    .workspace {
+
+        display:
+            flex;
+
+        flex-direction:
+            column;
+    }
+
+
+    .center-frame {
+
+        order:
+            1;
+
+        min-height:
+            350px;
+    }
+
+
+    .left-column {
+
+        order:
+            2;
+
+        min-height:
+            650px;
+    }
+
+
+    .right-column {
+
+        order:
+            3;
+
+        min-height:
+            650px;
+    }
+
+
+    .dashboard-image {
+
+        min-height:
+            200px;
+    }
+
+
+    #notesPopup,
+    #weatherPopup,
+    #colorPopup {
+
+        right:
+            10px;
+
+        left:
+            10px;
+
+        width:
+            auto;
+    }
+
+
+    #stickerPanel {
+
+        width:
+            180px;
+    }
+
+}
+
+
+/* =========================================================
+   REDUCCIÓN DE MOVIMIENTO
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+
+        animation-duration:
+            0.01ms !important;
+
+        animation-iteration-count:
+            1 !important;
+
+        transition-duration:
+            0.01ms !important;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     CARGA
+     ===================================================== -->
+
+<div id="loadingScreen">
+
+    <!-- COLOCA AQUÍ TU IMAGEN -->
+
+    <img
+        id="carga"
+        src="image/carga.jpg"
+        alt="carga"
+    >
+
+    <div class="loading-bar">
+
+        <div
+            id="loadingProgress"
+            class="loading-progress"
+        ></div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     PAGINA PRINCIPAL
+     ===================================================== -->
+
+<div id="mainPage">
+
+
+<header class="top-bar">
+
+
+    <div class="left-tools">
+
+
+        <button id="helpButton">
+            ?
+        </button>
+
+
+        <!-- COLOCA AQUÍ TU LOGO -->
+
+        <img
+            id="logo"
+            src="image/logo.jpg"
+            alt="logo"
+        >
+
+
+    </div>
+
+
+    <h1 id="pageTitle">
+        My Nook
+    </h1>
+
+
+    <div class="right-tools">
+
+
+        <button
+            id="noteButton"
+            class="tool-image"
+        >
+            📝
+        </button>
+
+
+        <button
+            id="weatherButton"
+            class="tool-image"
+        >
+            🌤️
+        </button>
+
+
+        <button
+            id="colorButton"
+            class="tool-image"
+        >
+            🎨
+        </button>
+
+
+    </div>
+
+
+</header>
+
+
+
+<!-- =====================================================
+     AYUDA
+     ===================================================== -->
+
+<div
+    id="helpPopup"
+    class="popup hidden"
+>
+
+    <h2>
+        ¿Cómo usar My Nook?
+    </h2>
+
+
+    <h3>
+        ¿Cómo puedo borrar una foto, nota o sticker?
+    </h3>
+
+    <p>
+        Haz doble click sobre el elemento para borrarlo.
+        En teléfono, tócalo dos veces rápidamente.
+    </p>
+
+
+    <h3>
+        ¿Cómo puedo mover una foto, nota o sticker?
+    </h3>
+
+    <p>
+        Mantén presionado el elemento y arrástralo
+        con el mouse o con el dedo.
+    </p>
+
+
+    <h3>
+        ¿Cómo puedo cambiar los colores de la página?
+    </h3>
+
+    <p>
+        Presiona el botón que tiene el pincel.
+    </p>
+
+
+    <h3>
+        ¿Cómo cambio el grosor de mi lápiz?
+    </h3>
+
+    <p>
+        Presiona nuevamente el botón del lápiz para
+        cambiar su grosor. Hay tres tamaños disponibles.
+    </p>
+
+</div>
+
+
+
+<!-- =====================================================
+     NOTAS
+     ===================================================== -->
+
+<div
+    id="notesPopup"
+    class="popup hidden"
+>
+
+    <h3>
+        Nueva nota
+    </h3>
+
+
+    <textarea
+        id="noteText"
+        placeholder="Escribe tu nota aquí..."
+    ></textarea>
+
+
+    <br>
+    <br>
+
+
+    <button id="createNote">
+        Guardar nota
+    </button>
+
+</div>
+
+
+
+<!-- =====================================================
+     CLIMA
+     ===================================================== -->
+
+<div
+    id="weatherPopup"
+    class="popup hidden"
+>
+
+    <h3>
+        Clima
+    </h3>
+
+
+    <input
+        id="cityInput"
+        type="text"
+        placeholder="Ciudad"
+    >
+
+
+    <button id="searchWeather">
+        Buscar
+    </button>
+
+
+    <div id="weatherResult">
+        Escribe una ciudad.
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     COLOR
+     ===================================================== -->
+
+<div
+    id="colorPopup"
+    class="popup hidden"
+>
+
+    <h3>
+        Color de My Nook
+    </h3>
+
+
+    <p>
+        Selecciona un color pastel:
+    </p>
+
+
+    <input
+        type="color"
+        id="pastelPicker"
+        value="#d9d9d9"
+    >
+
+
+    <p>
+        El color será suavizado automáticamente
+        para mantener una tonalidad pastel.
+    </p>
+
+</div>
+
+
+
+<!-- =====================================================
+     ESPACIO PRINCIPAL
+     ===================================================== -->
+
+<main class="workspace">
+
+
+
+<!-- =====================================================
+     IZQUIERDA
+     ===================================================== -->
+
+<section class="left-column">
+
+
+    <!-- CALENDARIO -->
+
+    <div
+        id="calendarContainer"
+        class="dashboard-image"
+    >
+
+        <img
+            id="calendario"
+            src="image/calendario.jpg"
+            alt="calendario"
+        >
+
+    </div>
+
+
+    <!-- FOTOS -->
+
+    <div
+        id="photoButton"
+        class="dashboard-image"
+    >
+
+        <img
+            id="fotos"
+            src="image/fotos.jpg"
+            alt="fotos"
+        >
+
+    </div>
+
+
+    <input
+        id="photoInput"
+        type="file"
+        accept="image/*"
+        multiple
+        hidden
+    >
+
+
+    <!-- STICKERS -->
+
+    <div id="stickerBar">
+            >
+    </div>
+
+
+</section>
+
+
+
+<!-- =====================================================
+     CENTRO
+     ===================================================== -->
+
+<section
+    class="center-frame"
+    id="centerFrame"
+>
+
+</section>
+
+
+
+<!-- =====================================================
+     DERECHA
+     ===================================================== -->
+
+<section class="right-column">
+
+
+    <!-- PIZARRÓN DE DIBUJO -->
+
+    <section class="paint-container">
+
+
+        <div class="paint-title">
+            🎨
+        </div>
+
+
+        <div class="paint-tools">
+
+
+            <input
+                id="drawColor"
+                type="color"
+                value="#000000"
+                title="Color"
+            >
+
+
+            <button
+                id="brushButton"
+                title="Cambiar tamaño"
+            >
+                ✏️
+            </button>
+
+
+            <button
+                id="eraserButton"
+                title="Goma"
+            >
+                🧽
+            </button>
+
+
+            <button
+                id="clearCanvas"
+                title="Borrar"
+            >
+                🗑️
+            </button>
+
+
+            <button
+                id="addDrawing"
+                title="Agregar dibujo"
+            >
+                ➕
+            </button>
+
+
+        </div>
+
+
+        <canvas
+            id="paintCanvas"
+        ></canvas>
+
+
+    </section>
+
+
+
+    <!-- CHECKLIST -->
+
+    <section class="todo-container">
+
+
+        <h2 class="todo-title">
+            Lista de tareas
+        </h2>
+
+
+        <div id="todoList"></div>
+
+
+        <button id="addTodo">
+            ➕ Añadir tarea
+        </button>
+
+
+    </section>
+
+
+</section>
+
+
+</main>
+
+</div>
+
+
+
+<!-- =====================================================
+     PANEL DE STICKERS
+     ===================================================== -->
+
+<div
+    id="stickerPanel"
+    class="hidden"
+>
+
+
+    <img
+        class="sticker-option"
+        src="image/sticker1.jpg"
+        alt="sticker1"
+        data-name="sticker1"
+    >
+
+
+    <img
+        class="sticker-option"
+        src="image/sticker2.jpg"
+        alt="sticker2"
+        data-name="sticker2"
+    >
+
+
+    <img
+        class="sticker-option"
+        src="image/sticker3.jpg"
+        alt="sticker3"
+        data-name="sticker3"
+    >
+
+
+    <img
+        class="sticker-option"
+        src="image/sticker4.jpg"
+        alt="sticker4"
+        data-name="sticker4"
+    >
+
+
+    <img
+        class="sticker-option"
+        src="image/sticker5.jpg"
+        alt="sticker5"
+        data-name="sticker5"
+    >
+
+
+</div>
+
+
+
+<script>
+
+/* =========================================================
+   CARGA
+   ========================================================= */
+
+let progress = 0;
+
+const loadingProgress =
+    document.getElementById(
+        "loadingProgress"
+    );
+
+const loadingScreen =
+    document.getElementById(
+        "loadingScreen"
+    );
+
+const mainPage =
+    document.getElementById(
+        "mainPage"
+    );
+
+
+const loadingInterval =
+    setInterval(() => {
+
+
+        progress += 2;
+
+
+        loadingProgress.style.width =
+            progress + "%";
+
+
+        if (progress >= 100) {
+
+
+            clearInterval(
+                loadingInterval
+            );
+
+
+            setTimeout(() => {
+
+
+                loadingScreen
+                    .classList
+                    .add("fade-out");
+
+
+                setTimeout(() => {
+
+
+                    loadingScreen.style.display =
+                        "none";
+
+
+                    mainPage.style.display =
+                        "block";
+
+
+                    resizeCanvas();
+
+
+                }, 700);
+
+
+            }, 300);
+
+        }
+
+
+    }, 30);
+
+
+
+/* =========================================================
+   POPUPS
+   ========================================================= */
+
+function togglePopup(id) {
+
+    document
+        .getElementById(id)
+        .classList
+        .toggle("hidden");
+
+}
+
+
+/* =========================================================
+   AYUDA
+   ========================================================= */
+
+document
+    .getElementById("helpButton")
+    .addEventListener(
+        "click",
+        () => {
+
+            togglePopup(
+                "helpPopup"
+            );
+
+        }
+    );
+
+
+
+/* =========================================================
+   NOTAS
+   ========================================================= */
+
+document
+    .getElementById("noteButton")
+    .addEventListener(
+        "click",
+        () => {
+
+            togglePopup(
+                "notesPopup"
+            );
+
+        }
+    );
+
+
+document
+    .getElementById("createNote")
+    .addEventListener(
+        "click",
+        () => {
+
+
+            const text =
+                document
+                    .getElementById(
+                        "noteText"
+                    )
+                    .value
+                    .trim();
+
+
+            if (!text)
+                return;
+
+
+            createNote(text);
+
+
+            document
+                .getElementById(
+                    "noteText"
+                )
+                .value = "";
+
+
+            document
+                .getElementById(
+                    "notesPopup"
+                )
+                .classList
+                .add("hidden");
+
+        }
+    );
+
+
+
+function createNote(text) {
+
+
+    const note =
+        document.createElement(
+            "div"
+        );
+
+
+    note.className =
+        "note";
+
+
+    note.style.left =
+        Math.random() * 45 + 25 + "%";
+
+
+    note.style.top =
+        Math.random() * 40 + 25 + "%";
+
+
+    note.innerHTML = `
+        <textarea>${escapeHTML(text)}</textarea>
+    `;
+
+
+    document.body.appendChild(
+        note
+    );
+
+
+    makeMovable(note);
+
+    makeDeletable(note);
+
+    makeTransformable(note);
+
+}
+
+
+
+/* =========================================================
+   ESCAPAR HTML
+   ========================================================= */
+
+function escapeHTML(text) {
+
+    const div =
+        document.createElement(
+            "div"
+        );
+
+
+    div.textContent =
+        text;
+
+
+    return div.innerHTML;
+
+}
+
+
+
+/* =========================================================
+   ELEMENTOS MOVIBLES
+   ========================================================= */
+
+function makeMovable(element) {
+
+
+    let dragging = false;
+
+    let offsetX = 0;
+
+    let offsetY = 0;
+
+
+    function startDrag(e) {
+
+        if (
+            e.target.closest(
+                ".transform-controls"
+            )
+        ) {
+            return;
+        }
+
+
+        if (
+            e.target.tagName ===
+            "TEXTAREA"
+        ) {
+            return;
+        }
+
+
+        dragging = true;
+
+
+        const rect =
+            element.getBoundingClientRect();
+
+        const clientX =
+            e.touches
+                ? e.touches[0].clientX
+                : e.clientX;
+
+        const clientY =
+            e.touches
+                ? e.touches[0].clientY
+                : e.clientY;
+
+        offsetX =
+            clientX - rect.left;
+
+        offsetY =
+            clientY - rect.top;
+
+        element.style.zIndex =
+            500;
+
+        e.preventDefault();
+
+    }
+
+
+    function drag(e) {
+
+        if (!dragging)
+            return;
+
+        const clientX =
+            e.touches
+                ? e.touches[0].clientX
+                : e.clientX;
+
+        const clientY =
+            e.touches
+                ? e.touches[0].clientY
+                : e.clientY;
+
+        element.style.left =
+            (
+                clientX -
+                offsetX
+            ) + "px";
+
+        element.style.top =
+            (
+                clientY -
+                offsetY
+            ) + "px";
+
+        if (element._updateTransformControls) {
+            element._updateTransformControls();
+        }
+
+        e.preventDefault();
+
+    }
+
+
+    function stopDrag() {
+        dragging = false;
+    }
+
+
+    element.addEventListener(
+        "mousedown",
+        startDrag
+    );
+
+    document.addEventListener(
+        "mousemove",
+        drag
+    );
+
+    document.addEventListener(
+        "mouseup",
+        stopDrag
+    );
+
+    element.addEventListener(
+        "touchstart",
+        startDrag,
+        {
+            passive: false
+        }
+    );
+
+    document.addEventListener(
+        "touchmove",
+        drag,
+        {
+            passive: false
+        }
+    );
+
+    document.addEventListener(
+        "touchend",
+        stopDrag
+    );
+
+}
+
+
+/* =========================================================
+   DOBLE CLICK PARA BORRAR
+   ========================================================= */
+
+function makeDeletable(element) {
+
+
+    element.addEventListener(
+        "dblclick",
+        (e) => {
+
+            e.stopPropagation();
+
+            if (element._transformControls) {
+                element._transformControls.remove();
+            }
+
+            element.remove();
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   ROTAR Y CAMBIAR TAMAÑO
+   ========================================================= */
+
+function makeTransformable(element) {
+
+
+    let rotation = 0;
+
+    let scale = 1;
+
+
+    const controls =
+        document.createElement(
+            "div"
+        );
+
+
+    controls.className =
+        "transform-controls";
+
+    controls.innerHTML = `
+
+        <button title="Rotar a la izquierda">↺</button>
+        <button title="Rotar a la derecha">↻</button>
+        <button title="Agrandar">＋</button>
+        <button title="Achicar">－</button>
+        <button class="mobile-delete" title="Eliminar">🗑️</button>
+
+    `;
+
+
+    document.body.appendChild(
+        controls
+    );
+
+    element._transformControls =
+        controls;
+
+
+    function updateControlsPosition() {
+
+        const rect =
+            element.getBoundingClientRect();
+
+        controls.style.left =
+            `${Math.max(5, rect.left)}px`;
+
+        controls.style.top =
+            `${Math.max(5, rect.top - 34)}px`;
+
+    }
+
+
+    function updateTransform() {
+
+        element.style.transform =
+            `rotate(${rotation}deg) scale(${scale})`;
+
+        updateControlsPosition();
+
+    }
+
+
+    element._updateTransformControls =
+        updateControlsPosition;
+
+
+    function showControls() {
+
+        controls.classList.add(
+            "visible"
+        );
+
+        updateControlsPosition();
+
+    }
+
+
+    function hideControls() {
+
+        setTimeout(
+            () => {
+
+                if (
+                    !element.matches(":hover") &&
+                    !controls.matches(":hover")
+                ) {
+
+                    controls.classList.remove(
+                        "visible"
+                    );
+
+                }
+
+            },
+            80
+        );
+
+    }
+
+
+    element.addEventListener(
+        "mouseenter",
+        showControls
+    );
+
+    element.addEventListener(
+        "mouseleave",
+        hideControls
+    );
+
+    controls.addEventListener(
+        "mouseenter",
+        showControls
+    );
+
+    controls.addEventListener(
+        "mouseleave",
+        hideControls
+    );
+
+    element.addEventListener(
+        "touchstart",
+        showControls,
+        { passive: true }
+    );
+
+
+    controls.children[0]
+        .addEventListener(
+            "click",
+            (e) => {
+
+                e.stopPropagation();
+                rotation -= 10;
+                updateTransform();
+
+            }
+        );
+
+    controls.children[1]
+        .addEventListener(
+            "click",
+            (e) => {
+
+                e.stopPropagation();
+                rotation += 10;
+                updateTransform();
+
+            }
+        );
+
+    controls.children[2]
+        .addEventListener(
+            "click",
+            (e) => {
+
+                e.stopPropagation();
+                scale = Math.min(3, scale * 1.1);
+                updateTransform();
+
+            }
+        );
+
+    controls.children[3]
+        .addEventListener(
+            "click",
+            (e) => {
+
+                e.stopPropagation();
+                scale = Math.max(0.4, scale * 0.9);
+                updateTransform();
+
+            }
+        );
+
+
+    /* Botón de borrado para teléfonos */
+    controls.children[4]
+        .addEventListener(
+            "click",
+            (e) => {
+
+                e.stopPropagation();
+                controls.remove();
+                element.remove();
+
+            }
+        );
+
+}
+
+
+/* =========================================================
+   CLIMA
+   ========================================================= */
+
+const OPENWEATHER_API_KEY =
+    "b35100ca5aef57ed3150b76e884bf450";
+
+
+document
+    .getElementById(
+        "weatherButton"
+    )
+    .addEventListener(
+        "click",
+        () => {
+
+            togglePopup(
+                "weatherPopup"
+            );
+
+        }
+    );
+
+
+document
+    .getElementById(
+        "searchWeather"
+    )
+    .addEventListener(
+        "click",
+        searchWeather
+    );
+
+
+document
+    .getElementById(
+        "cityInput"
+    )
+    .addEventListener(
+        "keydown",
+        (e) => {
+
+
+            if (
+                e.key ===
+                "Enter"
+            ) {
+
+                searchWeather();
+
+            }
+
+        }
+    );
+
+
+
+async function searchWeather() {
+
+
+    const city =
+        document
+            .getElementById(
+                "cityInput"
+            )
+            .value
+            .trim();
+
+
+    const result =
+        document.getElementById(
+            "weatherResult"
+        );
+
+
+    if (!city) {
+
+        result.textContent =
+            "Escribe una ciudad.";
+
+        return;
+
+    }
+
+
+    if (
+        OPENWEATHER_API_KEY ===
+        "TU_API_KEY"
+    ) {
+
+        result.innerHTML =
+            "Coloca primero tu API key de OpenWeatherMap.";
+
+        return;
+
+    }
+
+
+    result.textContent =
+        "Buscando...";
+
+
+    try {
+
+
+        const response =
+            await fetch(
+                `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${OPENWEATHER_API_KEY}&units=metric&lang=es`
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error();
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        result.innerHTML = `
+
+            <h3>
+                ${data.name}
+            </h3>
+
+            <p>
+                🌡️
+                ${Math.round(data.main.temp)}
+                °C
+            </p>
+
+            <p>
+                🌤️
+                ${data.weather[0].description}
+            </p>
+
+            <p>
+                💧
+                Humedad:
+                ${data.main.humidity}%
+            </p>
+
+            <p>
+                💨
+                Viento:
+                ${data.wind.speed}
+                m/s
+            </p>
+
+        `;
+
+
+    } catch {
+
+        result.textContent =
+            "No se pudo obtener el clima.";
+
+    }
+
+}
+
+
+
+/* =========================================================
+   COLOR
+   ========================================================= */
+
+document
+    .getElementById(
+        "colorButton"
+    )
+    .addEventListener(
+        "click",
+        () => {
+
+            togglePopup(
+                "colorPopup"
+            );
+
+        }
+    );
+
+
+document
+    .getElementById(
+        "pastelPicker"
+    )
+    .addEventListener(
+        "input",
+        (e) => {
+
+
+            const color =
+                makePastel(
+                    e.target.value
+                );
+
+
+            applyTheme(
+                color
+            );
+
+        }
+    );
+
+
+
+function makePastel(hex) {
+
+
+    let r =
+        parseInt(
+            hex.substring(1,3),
+            16
+        );
+
+
+    let g =
+        parseInt(
+            hex.substring(3,5),
+            16
+        );
+
+
+    let b =
+        parseInt(
+            hex.substring(5,7),
+            16
+        );
+
+
+    r =
+        Math.round(
+            r * 0.45 +
+            255 * 0.55
+        );
+
+
+    g =
+        Math.round(
+            g * 0.45 +
+            255 * 0.55
+        );
+
+
+    b =
+        Math.round(
+            b * 0.45 +
+            255 * 0.55
+        );
+
+
+    return `
+        rgb(
+            ${r},
+            ${g},
+            ${b}
+        )
+    `;
+
+}
+
+
+
+function applyTheme(color) {
+
+
+    document.documentElement.style
+        .setProperty(
+            "--bg",
+            color
+        );
+
+
+    const lighter =
+        lightenColor(
+            color,
+            25
+        );
+
+
+    document.documentElement.style
+        .setProperty(
+            "--bg-light",
+            lighter
+        );
+
+
+    const darker =
+        darkenColor(
+            color,
+            35
+        );
+
+
+    document.documentElement.style
+        .setProperty(
+            "--main",
+            darker
+        );
+
+
+    document.documentElement.style
+        .setProperty(
+            "--border",
+            darker
+        );
+
+}
+
+
+
+function lightenColor(
+    color,
+    amount
+) {
+
+
+    const rgb =
+        color
+            .match(/\d+/g)
+            .map(Number);
+
+
+    return `
+        rgb(
+            ${Math.min(
+                255,
+                rgb[0] + amount
+            )},
+
+            ${Math.min(
+                255,
+                rgb[1] + amount
+            )},
+
+            ${Math.min(
+                255,
+                rgb[2] + amount
+            )}
+        )
+    `;
+
+}
+
+
+
+function darkenColor(
+    color,
+    amount
+) {
+
+
+    const rgb =
+        color
+            .match(/\d+/g)
+            .map(Number);
+
+
+    return `
+        rgb(
+            ${Math.max(
+                0,
+                rgb[0] - amount
+            )},
+
+            ${Math.max(
+                0,
+                rgb[1] - amount
+            )},
+
+            ${Math.max(
+                0,
+                rgb[2] - amount
+            )}
+        )
+    `;
+
+}
+
+
+
+/* =========================================================
+   CALENDARIO
+   ========================================================= */
+
+let calendarDate =
+    new Date();
+
+
+let calendarIsOpen =
+    false;
+
+
+
+document
+    .getElementById(
+        "calendarContainer"
+    )
+    .addEventListener(
+        "click",
+        openCalendar
+    );
+
+
+
+function openCalendar(e) {
+
+
+    /*
+        Si ya estamos dentro del calendario,
+        no volvemos a reconstruirlo.
+    */
+
+    if (
+        e.target.closest(
+            ".calendar-day"
+        ) ||
+        e.target.closest(
+            ".calendar-header"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    if (calendarIsOpen)
+        return;
+
+
+    calendarIsOpen =
+        true;
+
+
+    const container =
+        document.getElementById(
+            "calendarContainer"
+        );
+
+
+    container.innerHTML = "";
+
+
+    const panel =
+        document.createElement(
+            "div"
+        );
+
+
+    panel.id =
+        "calendarPanel";
+
+
+    const header =
+        document.createElement(
+            "div"
+        );
+
+
+    header.className =
+        "calendar-header";
+
+
+    const previous =
+        document.createElement(
+            "button"
+        );
+
+
+    previous.textContent =
+        "←";
+
+
+    const title =
+        document.createElement(
+            "strong"
+        );
+
+
+    const next =
+        document.createElement(
+            "button"
+        );
+
+
+    next.textContent =
+        "→";
+
+
+    header.append(
+        previous,
+        title,
+        next
+    );
+
+
+    const grid =
+        document.createElement(
+            "div"
+        );
+
+
+    grid.className =
+        "calendar-grid";
+
+
+    panel.append(
+        header,
+        grid
+    );
+
+
+    container.appendChild(
+        panel
+    );
+
+
+    /*
+        IMPORTANTE:
+        Evitamos que los clicks internos
+        vuelvan al contenedor principal.
+    */
+
+    panel.addEventListener(
+        "click",
+        (e) => {
+
+            e.stopPropagation();
+
+        }
+    );
+
+
+
+    function renderCalendar() {
+
+
+        grid.innerHTML = "";
+
+
+        const year =
+            calendarDate
+                .getFullYear();
+
+
+        const month =
+            calendarDate
+                .getMonth();
+
+
+        title.textContent =
+            calendarDate.toLocaleString(
+                "es-ES",
+                {
+                    month:
+                        "long",
+
+                    year:
+                        "numeric"
+                }
+            );
+
+
+        const firstDay =
+            new Date(
+                year,
+                month,
+                1
+            ).getDay();
+
+
+        const days =
+            new Date(
+                year,
+                month + 1,
+                0
+            ).getDate();
+
+
+        /*
+            Espacios antes del primer día.
+        */
+
+        const emptyDays =
+            firstDay === 0
+                ? 6
+                : firstDay - 1;
+
+
+        for (
+            let i = 0;
+            i < emptyDays;
+            i++
+        ) {
+
+            grid.appendChild(
+                document.createElement(
+                    "div"
+                )
+            );
+
+        }
+
+
+        /*
+            Días del mes.
+        */
+
+        for (
+            let day = 1;
+            day <= days;
+            day++
+        ) {
+
+
+            const cell =
+                document.createElement(
+                    "div"
+                );
+
+
+            cell.className =
+                "calendar-day";
+
+
+            cell.textContent =
+                day;
+
+
+            /*
+                0 = nada
+                1 = círculo
+                2 = X
+                3 = corazón
+            */
+
+            let state = 0;
+
+
+
+            cell.addEventListener(
+                "click",
+                (e) => {
+
+
+                    /*
+                        EVITA QUE EL CLICK
+                        SE PROPAGUE.
+                    */
+
+                    e.stopPropagation();
+
+
+                    state++;
+
+
+                    if (state > 3) {
+
+                        state = 0;
+
+                    }
+
+
+                    cell.classList.remove(
+                        "mark-circle",
+                        "mark-x",
+                        "mark-heart"
+                    );
+
+
+                    if (
+                        state === 1
+                    ) {
+
+                        cell.classList.add(
+                            "mark-circle"
+                        );
+
+                    }
+
+
+                    else if (
+                        state === 2
+                    ) {
+
+                        cell.classList.add(
+                            "mark-x"
+                        );
+
+                    }
+
+
+                    else if (
+                        state === 3
+                    ) {
+
+                        cell.classList.add(
+                            "mark-heart"
+                        );
+
+                    }
+
+                }
+            );
+
+
+            grid.appendChild(
+                cell
+            );
+
+        }
+
+    }
+
+
+
+    previous.addEventListener(
+        "click",
+        (e) => {
+
+
+            e.stopPropagation();
+
+
+            calendarDate.setMonth(
+                calendarDate.getMonth() - 1
+            );
+
+
+            renderCalendar();
+
+        }
+    );
+
+
+
+    next.addEventListener(
+        "click",
+        (e) => {
+
+
+            e.stopPropagation();
+
+
+            calendarDate.setMonth(
+                calendarDate.getMonth() + 1
+            );
+
+
+            renderCalendar();
+
+        }
+    );
+
+
+
+    renderCalendar();
+
+}
+
+
+
+/* =========================================================
+   FOTOS
+   ========================================================= */
+
+document
+    .getElementById(
+        "photoButton"
+    )
+    .addEventListener(
+        "click",
+        () => {
+
+
+            document
+                .getElementById(
+                    "photoInput"
+                )
+                .click();
+
+        }
+    );
+
+
+
+document
+    .getElementById(
+        "photoInput"
+    )
+    .addEventListener(
+        "change",
+        (e) => {
+
+
+            const files =
+                Array.from(
+                    e.target.files
+                );
+
+
+            files.forEach(
+                file => {
+
+
+                    const reader =
+                        new FileReader();
+
+
+                    reader.onload =
+                        event => {
+
+
+                            createPhoto(
+                                event.target.result
+                            );
+
+                        };
+
+
+                    reader.readAsDataURL(
+                        file
+                    );
+
+                }
+            );
+
+
+            e.target.value =
+                "";
+
+        }
+    );
+
+
+
+function createPhoto(src) {
+
+
+    const img =
+        document.createElement(
+            "img"
+        );
+
+
+    img.src =
+        src;
+
+
+    img.className =
+        "movable user-photo";
+
+
+    img.style.left =
+        "35%";
+
+
+    img.style.top =
+        "35%";
+
+
+    document.body.appendChild(
+        img
+    );
+
+
+    makeMovable(img);
+
+    makeDeletable(img);
+
+    makeTransformable(img);
+
+}
+
+
+
+/* =========================================================
+   STICKERS
+   ========================================================= */
+
+document
+    .getElementById(
+        "stickerBar"
+    )
+    .addEventListener(
+        "click",
+        () => {
+
+
+            const panel =
+                document.getElementById(
+                    "stickerPanel"
+                );
+
+
+            panel.classList.toggle(
+                "hidden"
+            );
+
+
+            const bar =
+                document.getElementById(
+                    "stickerBar"
+                );
+
+
+            bar.textContent =
+                panel.classList.contains(
+                    "hidden"
+                )
+                    ? ">"
+                    : "<";
+
+        }
+    );
+
+
+
+document
+    .querySelectorAll(
+        ".sticker-option"
+    )
+    .forEach(
+        sticker => {
+
+
+            sticker.addEventListener(
+                "click",
+                () => {
+
+
+                    /*
+                        Como tus imágenes están vacías
+                        ahora mismo, no hacemos nada.
+                    */
+
+                    if (
+                        !sticker.getAttribute(
+                            "src"
+                        )
+                    )
+                        return;
+
+
+                    const newSticker =
+                        document.createElement(
+                            "img"
+                        );
+
+
+                    newSticker.src =
+                        sticker.src;
+
+
+                    newSticker.className =
+                        "movable user-sticker";
+
+
+                    newSticker.style.left =
+                        "40%";
+
+
+                    newSticker.style.top =
+                        "40%";
+
+
+                    document.body.appendChild(
+                        newSticker
+                    );
+
+
+                    makeMovable(
+                        newSticker
+                    );
+
+
+                    makeDeletable(
+                        newSticker
+                    );
+
+
+                    makeTransformable(
+                        newSticker
+                    );
+
+                }
+            );
+
+        }
+    );
+
+
+
+/* =========================================================
+   PIZARRÓN DE DIBUJO
+   ========================================================= */
+
+const canvas =
+    document.getElementById(
+        "paintCanvas"
+    );
+
+
+const ctx =
+    canvas.getContext(
+        "2d"
+    );
+
+
+let drawing =
+    false;
+
+
+let erasing =
+    false;
+
+
+const brushSizes =
+    [3, 7, 14];
+
+
+let brushIndex =
+    0;
+
+
+let brushSize =
+    brushSizes[0];
+
+
+
+function resizeCanvas() {
+
+
+    const oldCanvas =
+        document.createElement(
+            "canvas"
+        );
+
+
+    oldCanvas.width =
+        canvas.width;
+
+
+    oldCanvas.height =
+        canvas.height;
+
+
+    if (
+        canvas.width &&
+        canvas.height
+    ) {
+
+        oldCanvas
+            .getContext("2d")
+            .drawImage(
+                canvas,
+                0,
+                0
+            );
+
+    }
+
+
+    canvas.width =
+        canvas.parentElement
+            .clientWidth;
+
+
+    canvas.height =
+        canvas.parentElement
+            .clientHeight;
+
+
+    if (
+        oldCanvas.width &&
+        oldCanvas.height
+    ) {
+
+        ctx.drawImage(
+            oldCanvas,
+            0,
+            0,
+            oldCanvas.width,
+            oldCanvas.height,
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
+    }
+
+}
+
+
+
+window.addEventListener(
+    "resize",
+    resizeCanvas
+);
+
+
+
+function getCanvasPosition(e) {
+
+
+    const rect =
+        canvas.getBoundingClientRect();
+
+
+    const clientX =
+        e.touches
+            ? e.touches[0].clientX
+            : e.clientX;
+
+
+    const clientY =
+        e.touches
+            ? e.touches[0].clientY
+            : e.clientY;
+
+
+    return {
+
+        x:
+            clientX -
+            rect.left,
+
+        y:
+            clientY -
+            rect.top
+
+    };
+
+}
+
+
+
+function startDrawing(e) {
+
+
+    drawing =
+        true;
+
+
+    const pos =
+        getCanvasPosition(e);
+
+
+    ctx.beginPath();
+
+
+    ctx.moveTo(
+        pos.x,
+        pos.y
+    );
+
+
+    e.preventDefault();
+
+}
+
+
+
+function draw(e) {
+
+
+    if (!drawing)
+        return;
+
+
+    const pos =
+        getCanvasPosition(e);
+
+
+    ctx.lineWidth =
+        brushSize;
+
+
+    ctx.lineCap =
+        "round";
+
+
+    ctx.lineJoin =
+        "round";
+
+
+    if (erasing) {
+
+
+        ctx.globalCompositeOperation =
+            "destination-out";
+
+
+    }
+
+    else {
+
+
+        ctx.globalCompositeOperation =
+            "source-over";
+
+
+        ctx.strokeStyle =
+            document
+                .getElementById(
+                    "drawColor"
+                )
+                .value;
+
+    }
+
+
+    ctx.lineTo(
+        pos.x,
+        pos.y
+    );
+
+
+    ctx.stroke();
+
+
+    e.preventDefault();
+
+}
+
+
+
+function stopDrawing() {
+
+
+    drawing =
+        false;
+
+
+    ctx.closePath();
+
+}
+
+
+
+canvas.addEventListener(
+    "mousedown",
+    startDrawing
+);
+
+
+canvas.addEventListener(
+    "mousemove",
+    draw
+);
+
+
+canvas.addEventListener(
+    "mouseup",
+    stopDrawing
+);
+
+
+canvas.addEventListener(
+    "mouseleave",
+    stopDrawing
+);
+
+
+canvas.addEventListener(
+    "touchstart",
+    startDrawing,
+    {
+        passive: false
+    }
+);
+
+
+canvas.addEventListener(
+    "touchmove",
+    draw,
+    {
+        passive: false
+    }
+);
+
+
+canvas.addEventListener(
+    "touchend",
+    stopDrawing
+);
+
+
+
+/* =========================================================
+   TAMAÑO LAPIZ
+   ========================================================= */
+
+document
+    .getElementById(
+        "brushButton"
+    )
+    .addEventListener(
+        "click",
+        () => {
+
+
+            brushIndex++;
+
+
+            if (
+                brushIndex >=
+                brushSizes.length
+            ) {
+
+                brushIndex = 0;
+
+            }
+
+
+            brushSize =
+                brushSizes[
+                    brushIndex
+                ];
+
+
+            erasing =
+                false;
+
+        }
+    );
+
+
+
+/* =========================================================
+   GOMA
+   ========================================================= */
+
+document
+    .getElementById(
+        "eraserButton"
+    )
+    .addEventListener(
+        "click",
+        () => {
+
+            erasing =
+                true;
+
+        }
+    );
+
+
+
+/* =========================================================
+   BORRAR DIBUJO
+   ========================================================= */
+
+document
+    .getElementById(
+        "clearCanvas"
+    )
+    .addEventListener(
+        "click",
+        () => {
+
+
+            ctx.clearRect(
+                0,
+                0,
+                canvas.width,
+                canvas.height
+            );
+
+        }
+    );
+
+
+
+/* =========================================================
+   AGREGAR DIBUJO
+   ========================================================= */
+
+document
+    .getElementById(
+        "addDrawing"
+    )
+    .addEventListener(
+        "click",
+        () => {
+
+
+            const image =
+                document.createElement(
+                    "img"
+                );
+
+
+            image.src =
+                canvas.toDataURL();
+
+
+            image.className =
+                "movable";
+
+
+            image.style.width =
+                "250px";
+
+
+            image.style.left =
+                "40%";
+
+
+            image.style.top =
+                "40%";
+
+
+            document.body.appendChild(
+                image
+            );
+
+
+            makeMovable(
+                image
+            );
+
+
+            makeDeletable(
+                image
+            );
+
+
+            makeTransformable(
+                image
+            );
+
+
+            ctx.clearRect(
+                0,
+                0,
+                canvas.width,
+                canvas.height
+            );
+
+        }
+    );
+
+
+
+/* =========================================================
+   CHECKLIST
+   ========================================================= */
+
+const todoList =
+    document.getElementById(
+        "todoList"
+    );
+
+
+
+document
+    .getElementById(
+        "addTodo"
+    )
+    .addEventListener(
+        "click",
+        addTodo
+    );
+
+
+
+function addTodo() {
+
+
+    /*
+        Permitimos una cantidad razonable
+        dependiendo del espacio disponible.
+    */
+
+    const maxTasks =
+        Math.max(
+            1,
+            Math.floor(
+                todoList.clientHeight /
+                45
+            )
+        );
+
+
+    if (
+        todoList.children.length >=
+        maxTasks
+    ) {
+
+
+        alert(
+            "La lista está llena. Termina o elimina una tarea."
+        );
+
+
+        return;
+
+    }
+
+
+    const task =
+        prompt(
+            "Escribe la tarea:"
+        );
+
+
+    if (!task)
+        return;
+
+
+    createTodo(
+        task
+    );
+
+}
+
+
+
+function createTodo(
+    text
+) {
+
+
+    const item =
+        document.createElement(
+            "div"
+        );
+
+
+    item.className =
+        "todo-item";
+
+
+    item.innerHTML = `
+
+        <input
+            type="checkbox"
+        >
+
+        <span
+            class="todo-text"
+        >
+            ${escapeHTML(text)}
+        </span>
+
+        <button
+            class="delete-task"
+            title="Eliminar"
+        >
+            ❌
+        </button>
+
+        <button
+            class="edit-task"
+            title="Editar"
+        >
+            ✏️
+        </button>
+
+    `;
+
+
+    const checkbox =
+        item.querySelector(
+            "input"
+        );
+
+
+    checkbox.addEventListener(
+        "change",
+        () => {
+
+
+            if (
+                !checkbox.checked
+            )
+                return;
+
+
+            item.classList.add(
+                "completed"
+            );
+
+
+            setTimeout(
+                () => {
+
+                    item.remove();
+
+                },
+                3000
+            );
+
+        }
+    );
+
+
+
+    item
+        .querySelector(
+            ".delete-task"
+        )
+        .addEventListener(
+            "click",
+            () => {
+
+                item.remove();
+
+            }
+        );
+
+
+
+    item
+        .querySelector(
+            ".edit-task"
+        )
+        .addEventListener(
+            "click",
+            () => {
+
+
+                const current =
+                    item
+                        .querySelector(
+                            ".todo-text"
+                        )
+                        .textContent
+                        .trim();
+
+
+                const newText =
+                    prompt(
+                        "Editar tarea:",
+                        current
+                    );
+
+
+                if (newText) {
+
+                    item
+                        .querySelector(
+                            ".todo-text"
+                        )
+                        .textContent =
+                        newText;
+
+                }
+
+            }
+        );
+
+
+    todoList.appendChild(
+        item
+    );
+
+}
+
+
+
+/* =========================================================
+   CERRAR POPUPS
+   ========================================================= */
+
+document.addEventListener(
+    "click",
+    (e) => {
+
+
+        const popups = [
+
+            "helpPopup",
+
+            "notesPopup",
+
+            "weatherPopup",
+
+            "colorPopup"
+
+        ];
+
+
+        const buttons = [
+
+            "helpButton",
+
+            "noteButton",
+
+            "weatherButton",
+
+            "colorButton"
+
+        ];
+
+
+        popups.forEach(
+            id => {
+
+
+                const popup =
+                    document.getElementById(
+                        id
+                    );
+
+
+                const clickedInsidePopup =
+                    popup.contains(
+                        e.target
+                    );
+
+
+                const clickedButton =
+                    buttons.some(
+                        buttonId =>
+                            document
+                                .getElementById(
+                                    buttonId
+                                )
+                                .contains(
+                                    e.target
+                                )
+                    );
+
+
+                if (
+                    !clickedInsidePopup &&
+                    !clickedButton
+                ) {
+
+                    popup.classList.add(
+                        "hidden"
+                    );
+
+                }
+
+            }
+        );
+
+    }
+);
+
+</script>
+
+</body>
+</html>
+```
